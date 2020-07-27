@@ -22,4 +22,4 @@ EXPOSE 53/udp
 ENV DOCKER_HOST unix:///var/run/docker.sock
 
 ENTRYPOINT ["/usr/local/bin/docker-gen"]
-CMD ["-watch", "-only-exposed", "-notify", "dnsmasq-reload", "/etc/dnsmasq.tmpl", "/etc/dnsmasq.conf"]
+CMD ["-watch", "-only-exposed", "-notify", "dnsmasq-reload -u root", "/etc/dnsmasq.tmpl", "/etc/dnsmasq.conf"]
