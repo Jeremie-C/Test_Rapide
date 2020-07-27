@@ -1,3 +1,11 @@
+# log all dns queries
+log-queries
+# dont use hosts nameservers
+no-resolv
+# dont use hosts file
+no-hosts
+
+# Containers
 {{ define "host" }}
     {{ $host := .Host }}
     {{ $tld := .Tld }}
@@ -39,6 +47,3 @@ address=/{{ $host }}.{{ $network.Name }}.{{ $tld }}/{{ $network.IP }}
         {{ template "host" (dict "Container" $container "Host" (print $host) "Tld" "") }}
     {{ end }}
 {{ end }}
-
-no-resolv
-no-hosts
