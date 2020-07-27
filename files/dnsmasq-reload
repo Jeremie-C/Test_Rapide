@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 killall dnsmasq
-/usr/sbin/dnsmasq "$@"
+/usr/sbin/dnsmasq
