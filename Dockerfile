@@ -4,6 +4,7 @@ RUN apk -U upgrade
 RUN apk --no-cache add \
   dnsmasq \
   openssl \
+  rc-status \
   tzdata
 
 RUN cp /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
@@ -20,4 +21,5 @@ EXPOSE 53/udp
 
 ENV DOCKER_HOST unix:///var/run/docker.sock
 
-ENTRYPOINT ["entrypoint"]
+ENTRYPOINT ["/usr/local/bin/docker-gen"]
+CMD ["-watch", "-only-exposed", "-notify", "/usr/local/bin/dnsmasq-reload -u root $*", "/etc/dnsmasq.tmpl", "/etc/dnsmasq.conf"]
