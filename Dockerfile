@@ -3,7 +3,7 @@ FROM alpine:latest
 RUN apk -U upgrade
 RUN apk --no-cache add \
   dnsmasq \
-  openssl \
+  supervisor \
   tzdata
 
 RUN cp /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
