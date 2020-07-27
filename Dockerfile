@@ -15,6 +15,7 @@ RUN wget -qO- https://github.com/Jeremie-C/my-docker-gen/releases/download/0.7.5
 
 COPY files/dnsmasq.tmpl /etc/dnsmasq.tmpl
 COPY files/dnsmasq-reload /usr/local/bin/dnsmasq-reload
+RUN chmod a+rwx,o-w /usr/local/bin/dnsmasq-reload
 
 EXPOSE 53/udp
 
