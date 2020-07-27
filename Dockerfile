@@ -4,7 +4,7 @@ RUN apk -U upgrade
 RUN apk --no-cache add \
   dnsmasq \
   openssl \
-  rc-status \
+  openrc \
   tzdata
 
 RUN cp /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
@@ -17,7 +17,7 @@ RUN rc-update add dnsmasq default
 RUN wget -qO- https://github.com/Jeremie-C/my-docker-gen/releases/download/0.7.5/docker-gen-alpine-linux-amd64-0.7.5.tar.gz | tar xvz -C /usr/local/bin
 
 USER root
-COPY docker-files/. /
+COPY dnsmasq.tmpl /etc/dnsmasq.tmpl
 
 EXPOSE 53/udp
 
