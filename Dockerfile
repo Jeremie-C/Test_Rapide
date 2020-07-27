@@ -13,12 +13,12 @@ RUN apk del tzdata
 
 RUN wget -qO- https://github.com/Jeremie-C/my-docker-gen/releases/download/0.7.5/docker-gen-alpine-linux-amd64-0.7.5.tar.gz | tar xvz -C /usr/local/bin
 
-USER root
-COPY docker-files/etc/dnsmasq.tmpl /etc/dnsmasq.tmpl
+COPY files/dnsmasq.tmpl /etc/dnsmasq.tmpl
+COPY files/dnsmasq-reload /usr/local/bin/dnsmasq-reload
 
 EXPOSE 53/udp
 
 ENV DOCKER_HOST unix:///var/run/docker.sock
 
 ENTRYPOINT ["/usr/local/bin/docker-gen"]
-CMD ["-watch", "-only-exposed", "-notify", "", "/etc/dnsmasq.tmpl", "/etc/dnsmasq.conf"]
+CMD ["-watch", "-only-exposed", "-notify", "dnsmasq-reload", "/etc/dnsmasq.tmpl", "/etc/dnsmasq.conf"]
