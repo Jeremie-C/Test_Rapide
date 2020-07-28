@@ -4,19 +4,20 @@ RUN apk -U upgrade
 RUN apk --no-cache add \
   dnsmasq \
   supervisor \
-  tzdata \
-  && rm -rf /var/cache/apk/*
+  tzdata
 
 RUN cp /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
   echo "Europe/Paris" > /etc/timezone
 
-RUN apk del tzdata
+RUN apk del tzdata \
+  && rm -rf /var/cache/apk/*
 
 RUN wget -qO- https://github.com/Jeremie-C/my-docker-gen/releases/download/0.7.5/docker-gen-alpine-linux-amd64-0.7.5.tar.gz | tar xvz -C /usr/local/bin
 
 RUN mkdir -p /etc/dnsmasq.d && \
-	echo -e '\nconf-dir=/etc/dnsmasq.d,.tmpl' >> /etc/dnsmasq.conf
+	rm -f /etc/dnsmasq.conf
 
+COPY fichiers/dnsmasq.conf /etc/dnsmasq.conf
 COPY fichiers/dnsmasq.tmpl /etc/dnsmasq.d/dockergen.tmpl
 COPY fichiers/supervisord.conf /etc/supervisor.d/docker-gen.ini
 

@@ -13,7 +13,9 @@ if [ "$1" = 'supervisord' ]; then
 
 	# Turn query loggin on
 	if [ "$LOG_QUERIES" = true ]; then
-		echo -e '\nlog-queries' >> /etc/dnsmasq.conf
+		sed -i '/log-queries/ s/^#*//' /etc/dnsmasq.conf
+	else
+		sed -i '/log-queries/ s/^#*/#/' /etc/dnsmasq.conf
 	fi
 	# Start supervisord
 	exec /usr/bin/supervisord -n
