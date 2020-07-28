@@ -15,11 +15,12 @@ RUN apk del tzdata \
 RUN wget -qO- https://github.com/Jeremie-C/my-docker-gen/releases/download/0.7.5/docker-gen-alpine-linux-amd64-0.7.5.tar.gz | tar xvz -C /usr/local/bin
 
 RUN mkdir -p /etc/dnsmasq.d && \
-	rm -f /etc/dnsmasq.conf
+	rm -f /etc/dnsmasq.conf && \
+  rm -f /etc/supervisord.conf
 
 COPY fichiers/dnsmasq.conf /etc/dnsmasq.conf
 COPY fichiers/dnsmasq.tmpl /etc/dnsmasq.d/dockergen.tmpl
-COPY fichiers/supervisord.conf /etc/supervisor.d/docker-gen.ini
+COPY fichiers/supervisord.conf /etc/supervisord.conf
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod a+rwx,o-w /docker-entrypoint.sh

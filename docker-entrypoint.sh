@@ -10,7 +10,6 @@ if [ "$1" = 'supervisord' ]; then
 	echo "address=/${DNS_DOMAIN}/${DNS_IP}" | tee -a $domain_conf
 	# Reverse resolution of $DNS_IP to ${DNS_DOMAIN}
 	echo $DNS_IP | awk -v dzone=${DNS_DOMAIN} -F . '{print "ptr-record="$4"."$3"."$2"."$1".in-addr.arpa,"dzone}' | tee -a $domain_conf
-
 	# Turn query loggin on
 	if [ "$LOG_QUERIES" = true ]; then
 		sed -i '/log-queries/ s/^#*//' /etc/dnsmasq.conf
