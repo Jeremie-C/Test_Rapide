@@ -35,4 +35,4 @@ EXPOSE 53/udp
 VOLUME /etc/dnsmasq.d
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["supervisord", "-n"]
+CMD ["supervisord"]
