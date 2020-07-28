@@ -25,8 +25,11 @@ COPY fichiers/supervisord.conf /etc/supervisord.conf
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod a+rwx,o-w /docker-entrypoint.sh
 
-ENV DNS_DOMAIN 'docker.local'
-ENV DNS_IP '192.168.1.1'
+ENV HOST_NAME 'docker.local'
+ENV HOST_IP '192.168.1.1'
+ENV HOST_TLD 'local'
+ENV DNS_NORESOLV false
+ENV DNS_NOHOSTS false
 ENV LOG_QUERIES false
 ENV DOCKER_HOST unix:///var/run/docker.sock
 
