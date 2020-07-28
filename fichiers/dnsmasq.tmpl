@@ -1,0 +1,24 @@
+# log all dns queries
+#log-queries
+# dont use hosts nameservers
+#no-resolv
+# dont use hosts file
+#no-hosts
+
+# Containers
+{{/* template */}}
+{{ define "host" }}
+    {{ $host := .Host }}
+    {{ range $index, $network := .Container.Networks }}
+        {{ if ne $network.IP "" }}
+address=/{{ $host }}/{{ $network.IP }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{/* Configuration via "DNS_NAME" environment variables */}}
+{{ range $host, $containers := groupByMulti $ "Env.DNS_NAME" "," }}
+    {{ range $index, $container := $containers }}
+        {{ template "host" (dict "Container" $container "Host" (print $host) "Tld" "") }}
+    {{ end }}
+{{ end }}

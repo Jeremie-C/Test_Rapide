@@ -4,7 +4,8 @@ RUN apk -U upgrade
 RUN apk --no-cache add \
   dnsmasq \
   supervisor \
-  tzdata
+  tzdata \
+  && rm -rf /var/cache/apk/*
 
 RUN cp /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
   echo "Europe/Paris" > /etc/timezone
@@ -13,13 +14,23 @@ RUN apk del tzdata
 
 RUN wget -qO- https://github.com/Jeremie-C/my-docker-gen/releases/download/0.7.5/docker-gen-alpine-linux-amd64-0.7.5.tar.gz | tar xvz -C /usr/local/bin
 
-COPY files/dnsmasq.tmpl /etc/dnsmasq.tmpl
-COPY files/dnsmasq-reload /usr/local/bin/dnsmasq-reload
-RUN chmod a+rwx,o-w /usr/local/bin/dnsmasq-reload
+RUN mkdir -p /etc/dnsmasq.d && \
+	echo -e '\nconf-dir=/etc/dnsmasq.d,.tmpl' >> /etc/dnsmasq.conf
+
+COPY fichiers/dnsmasq.tmpl /etc/dnsmasq.d/dockergen.tmpl
+COPY fichiers/supervisord.conf /etc/supervisor.d/docker-gen.ini
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod a+rwx,o-w /docker-entrypoint.sh
+
+ENV DNS_DOMAIN 'docker.local'
+ENV DNS_IP '192.168.1.1'
+ENV LOG_QUERIES false
+ENV DOCKER_HOST unix:///var/run/docker.sock
 
 EXPOSE 53/udp
 
-ENV DOCKER_HOST unix:///var/run/docker.sock
+VOLUME /etc/dnsmasq.d
 
-ENTRYPOINT ["/usr/local/bin/docker-gen"]
-CMD ["-watch", "-only-exposed", "-notify", "dnsmasq-reload -u root", "/etc/dnsmasq.tmpl", "/etc/dnsmasq.conf"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["supervisord", "-n"]
